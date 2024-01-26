@@ -1,0 +1,49 @@
+.container {
+  width: 50%;
+  margin: auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid #36454f;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button {
+  background-color: white;
+  color: #36454f;
+  padding: 0.5rem;
+  border: none;
+  border: solid #36454f;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #36454f;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  .input,
+  .button {
+    font-size: 14px;
+  }
+}

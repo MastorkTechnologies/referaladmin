@@ -1,0 +1,70 @@
+.editPage {
+  width: 60%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  border-top: 1px solid #36454f;
+  border-bottom: 1px solid #36454f;
+  padding: 0.5rem;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.fieldDetails {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.fieldButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.addFieldForm {
+  margin-top: 20px;
+}
+
+.button {
+  background-color: white;
+  color: #36454f;
+  padding: 0.5rem;
+  border: none;
+  border: solid #36454f;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button:hover {
+  background-color: #36454f;
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .fieldDetails {
+    flex-direction: column;
+  }
+}
+@media (max-width: 768px) {
+  .fieldButtons {
+    flex-direction: column;
+  }
+}

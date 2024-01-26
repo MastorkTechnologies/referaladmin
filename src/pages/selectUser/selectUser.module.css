@@ -1,0 +1,82 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.selectUser {
+  max-width: 70%;
+  margin: auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border: 1px solid #36454f;
+}
+
+.selectUser h2 {
+  text-align: center;
+  color: #36454f;
+  margin-bottom: 20px;
+}
+
+.selectUser input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.selectUser ul {
+  list-style: none;
+  padding: 0;
+}
+
+.selectUser li {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.selectUser li:hover {
+  transform: translateY(-5px);
+}
+
+.selectUser p {
+  margin-bottom: 8px;
+}
+
+.button {
+  background-color: #36454f;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: gray;
+}
+
+@media (max-width: 768px) {
+  .selectUser {
+    padding: 20px;
+  }
+
+  .selectUser li {
+    padding: 15px;
+  }
+
+  .selectUser input,
+  .selectUser button {
+    font-size: 14px;
+  }
+}

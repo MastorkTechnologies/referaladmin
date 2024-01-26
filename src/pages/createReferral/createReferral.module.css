@@ -1,0 +1,119 @@
+.createReferral {
+  width: 50%;
+  margin: auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border: 1px solid #36454f;
+}
+
+.dashboardLink {
+  text-decoration: none;
+}
+
+.dashboardButton {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dashboardButton:hover {
+  background-color: #217dbb;
+}
+
+.userDetails {
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.companySelect {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.createReferralButton {
+  background-color: #36454f;
+  color: #fff;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 18px;
+  cursor: pointer;
+  /* transition: background-color 0.3s ease; */
+}
+
+/* .createReferralButton:hover {
+  background-color: white;
+  color: #36454f;
+} */
+
+.button {
+  background-color: white;
+  color: #36454f;
+  padding: 0.5rem;
+  border: none;
+  border: solid #36454f;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #36454f;
+  color: white;
+}
+
+.referralLink {
+  background-color: rgb(240, 240, 240);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.copyLink {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin: 1rem auto;
+}
+
+@media (max-width: 600px) {
+  .createReferral {
+    padding: 15px;
+  }
+
+  .dashboardButton {
+    font-size: 14px;
+  }
+
+  .userDetails {
+    font-size: 14px;
+  }
+
+  .companySelect {
+    font-size: 14px;
+  }
+
+  .createReferralButton {
+    font-size: 16px;
+  }
+}

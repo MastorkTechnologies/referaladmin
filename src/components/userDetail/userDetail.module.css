@@ -1,0 +1,51 @@
+ul {
+  list-style-type: none;
+  padding-left: 1em;
+}
+
+li {
+  margin-bottom: 1em;
+}
+
+strong {
+  margin-right: 0.5em;
+  font-weight: bold;
+}
+
+.objectList {
+  border-left: 2px solid #36454f;
+  padding-left: 1em;
+  margin-left: 1em;
+}
+
+.listItem {
+  border-bottom: 1px solid #ecf0f1;
+  padding-bottom: 0.5em;
+}
+
+.key {
+  color: #36454f;
+}
+
+.linkContainer {
+  display: flex;
+  align-items: center;
+}
+
+.linkContainer span {
+  flex: 1;
+}
+
+.linkContainer button {
+  background-color: #36454f;
+  color: #fff;
+  border: none;
+  padding: 0.5em;
+  border-radius: 0.3em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.linkContainer button:hover {
+  background-color: gray;
+}
