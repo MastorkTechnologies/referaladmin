@@ -11,7 +11,7 @@ import Footer from "../../components/footer/footer";
 import UserDetail from "../../components/userDetail/userDetail";
 
 const CreateReferral = () => {
-  const domain = `https://joinmidson-ochre.vercel.app`;
+  const domain = `https://lrd.midsongroup.com`;
   const { userId } = useParams();
   const [link, setLink] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
