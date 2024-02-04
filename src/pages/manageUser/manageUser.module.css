@@ -20,6 +20,10 @@
   border-radius: 0.5rem;
 }
 
+.label {
+  font-size: 1rem;
+}
+
 .test {
   overflow-x: auto;
   display: flex;

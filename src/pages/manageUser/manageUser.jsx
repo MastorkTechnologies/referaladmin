@@ -6,6 +6,8 @@ import {
   doc,
   updateDoc,
   getDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import styles from "./manageUser.module.css";
 import { db } from "../../firebase";
@@ -97,6 +99,7 @@ const ManageUser = () => {
   getColumns();
 
   const headers = [
+    { label: "Customer ID", key: "custId" },
     { label: "Name", key: "name" },
     { label: "Email", key: "email" },
     { label: "Phone Number", key: "phoneNumber" },
@@ -145,8 +148,6 @@ const ManageUser = () => {
     fetchLastDownload();
   }, []);
 
-  console.log(lastDownload);
-
   const handleViewUser = (user) => {
     setSelectedUser(user);
     setViewModalOpen(true);
@@ -157,37 +158,70 @@ const ManageUser = () => {
   };
 
   const handleEditUser = (user) => {
+    var tempUser = user;
+    if (tempUser.age) {
+      console.log("exists");
+    } else {
+      tempUser.age = "";
+    }
+    if (tempUser.address) {
+      console.log("exists");
+    } else {
+      tempUser.address = "";
+    }
+    if (tempUser.gender) {
+      console.log("exists");
+    } else {
+      tempUser.gender = "";
+    }
     setSelectedUser(user);
-    setEditedUser(user);
+    setEditedUser(tempUser);
     setEditModalOpen(true);
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (userId, phoneNumber) => {
     try {
+      const docRef = doc(db, "meta", "phoneNumbers");
+      await updateDoc(docRef, { phoneNumbers: arrayRemove(phoneNumber) });
+
       const userDoc = doc(db, "users", userId);
       await deleteDoc(userDoc);
 
       setUsers(users.filter((user) => user.id !== userId));
+      toast.success("User deleted successfully!");
     } catch (error) {
-      console.error("Error deleting user:", error);
+      toast.error("Error deleting user");
     }
   };
 
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     try {
-      const userDoc = doc(db, "users", editedUser.id);
-      await updateDoc(userDoc, editedUser);
+      const docRef = doc(db, "meta", "phoneNumbers");
+      const docSnap = await getDoc(docRef);
 
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === editedUser.id ? { ...user, ...editedUser } : user
-        )
-      );
+      if (docSnap.exists()) {
+        if (docSnap.data()?.phoneNumbers?.includes(editedUser.phoneNumber)) {
+          toast.error("This phone number already exists!");
+          return;
+        } else {
+          await updateDoc(docRef, {
+            phoneNumbers: arrayUnion(editedUser.phoneNumber),
+          });
+          const userDoc = doc(db, "users", editedUser.id);
+          await updateDoc(userDoc, editedUser);
 
+          setUsers((prevUsers) =>
+            prevUsers.map((user) =>
+              user.id === editedUser.id ? { ...user, ...editedUser } : user
+            )
+          );
+          toast.success("User updated successfully!");
+        }
+      }
       setEditModalOpen(false);
     } catch (error) {
-      console.error("Error updating user:", error);
+      toast.error("Error updating user");
     }
   };
 
@@ -201,21 +235,24 @@ const ManageUser = () => {
     <>
       <Header />
       <div className={styles["test"]}>
-        <CSVLink
-          className={styles.button}
-          data={referedUsers}
-          headers={headers}
-          onClick={(event, done) => {
-            const userDoc = doc(db, "meta", "lastdownloadcsv");
-            updateDoc(userDoc, { lastDownload: new Date() }).then(() => {
-              toast.success("Downloaded");
-              done();
-            });
-          }}
-          filename={`ReferredUsers-(${fileName}).csv`}
-        >
-          Download Referred Users
-        </CSVLink>
+        {location.pathname !== "/manage-created-users" && (
+          <CSVLink
+            className={styles.button}
+            data={referedUsers}
+            headers={headers}
+            onClick={(event, done) => {
+              const userDoc = doc(db, "meta", "lastdownloadcsv");
+              updateDoc(userDoc, { lastDownload: new Date() }).then(() => {
+                toast.success("Downloaded");
+                done();
+              });
+            }}
+            filename={`ReferredUsers-(${fileName}).csv`}
+          >
+            Download Referred Users
+          </CSVLink>
+        )}
+
         {location.pathname !== "/manage-created-users" ? (
           <table className={styles.userTable}>
             <thead>
@@ -225,6 +262,7 @@ const ManageUser = () => {
                 </th>
               </tr>
               <tr>
+                <th>Customer ID</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
@@ -239,6 +277,7 @@ const ManageUser = () => {
                 (user) =>
                   user.createdBy.email === "landingpage" && (
                     <tr key={user.id}>
+                      <td>{user?.id || user?.custId || "NA"}</td>
                       <td>{user?.name || "NA"}</td>
                       <td>{user?.email || "NA"}</td>
                       <td>{user?.phoneNumber || user?.phone}</td>
@@ -266,7 +305,9 @@ const ManageUser = () => {
                         </button>
                         <button
                           className={styles["button"]}
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() =>
+                            handleDeleteUser(user.id, user.phoneNumber)
+                          }
                         >
                           Delete
                         </button>
@@ -283,6 +324,7 @@ const ManageUser = () => {
                 <h2>Created Users</h2>
               </th>
               <tr>
+                <th>Customer ID</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
@@ -297,6 +339,7 @@ const ManageUser = () => {
                 (user) =>
                   user?.createdBy?.email !== "landingpage" && (
                     <tr key={user?.id}>
+                      <td>{user?.id || user?.custId || "NA"}</td>
                       <td>{user?.name || "NA"}</td>
                       <td>{user?.email || "NA"}</td>
                       <td>{user?.phoneNumber || user?.phone || "NA"}</td>
@@ -330,7 +373,9 @@ const ManageUser = () => {
                         </button>
                         <button
                           className={styles["button"]}
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() =>
+                            handleDeleteUser(user.id, user.phoneNumber)
+                          }
                         >
                           Delete
                         </button>
@@ -360,12 +405,14 @@ const ManageUser = () => {
             onClose={() => setViewReferModal(false)}
             title="View Refer To User"
           >
-            {selectedUser && (
+            {selectedUser && selectedUser?.referTo?.length > 0 ? (
               <div className={styles["userDetails"]}>
                 {selectedUser.referTo && (
                   <UserDetail obj={selectedUser?.referTo} />
                 )}
               </div>
+            ) : (
+              <p>Nothing to show here!</p>
             )}
           </Modal>
         )}
@@ -383,25 +430,48 @@ const ManageUser = () => {
                 .filter(([key]) => key !== "referralLink")
                 .filter(([key]) => key !== "referBy")
                 .filter(([key]) => key !== "referTo")
-                .filter(([key]) => key !== "custId")
-                .filter(([key]) => key !== "email")
-                .map(([fieldName]) => (
-                  <div key={fieldName}>
-                    <label>
-                      {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}:
-                    </label>
-                    <input
-                      type="text"
-                      value={editedUser[fieldName]}
-                      onChange={(e) =>
-                        setEditedUser({
-                          ...editedUser,
-                          [fieldName]: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                ))}
+                .map(([fieldName]) =>
+                  fieldName !== "gender" ? (
+                    <div key={fieldName}>
+                      <label className={styles.label}>
+                        {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
+                        :
+                      </label>
+                      <input
+                        type="text"
+                        value={editedUser[fieldName]}
+                        onChange={(e) =>
+                          setEditedUser({
+                            ...editedUser,
+                            [fieldName]: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <div key={fieldName}>
+                      <label>
+                        {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
+                        :
+                      </label>
+                      <select
+                        className={styles.select}
+                        value={editedUser[fieldName]}
+                        onChange={(e) =>
+                          setEditedUser({
+                            ...editedUser,
+                            [fieldName]: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  )
+                )}
 
               <button
                 className={styles["button"]}
