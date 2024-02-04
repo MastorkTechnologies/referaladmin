@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./createUser.module.css";
 import { useSelector } from "react-redux";
-import { doc, setDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import toast from "react-hot-toast";
 import Header from "../../components/header/header";
@@ -15,7 +15,6 @@ const CreateUser = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
-  const [error, setError] = useState("");
 
   const user = useSelector((state) => state.auth.user);
 
@@ -23,32 +22,40 @@ const CreateUser = () => {
     e.preventDefault();
     console.log(name, phoneNumber, email, age, gender, address);
     if (!name || !phoneNumber || !email || !age || !gender || !address) {
-      setError("All fields are required");
-      console.log("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
     if (!/^\d+$/.test(age) || parseInt(age, 10) <= 0) {
-      setError("Age must be a positive integer");
-      console.log("Age must be a positive integer");
+      toast.error("Age must be a positive integer");
       return;
     }
 
     if (!/^\d{10}$/.test(phoneNumber)) {
-      setError("Invalid phone number");
-      console.log("Invalid phone number");
-      return;
+      if (phoneNumber.length < 10) {
+        toast.error("Invalid phone number");
+        return;
+      }
     }
 
     if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setError("Invalid email address");
-      console.log("Invalid email address");
+      toast.error("Invalid email address");
       return;
     }
 
-    setError("");
-
     try {
+      const docRef = doc(db, "meta", "phoneNumbers");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        if (docSnap.data()?.phoneNumbers?.includes(phoneNumber)) {
+          toast.error("This phone number already exists!");
+          return;
+        } else {
+          await updateDoc(docRef, { phoneNumbers: arrayUnion(phoneNumber) });
+        }
+      }
+
       const newUser = {
         custId,
         name,
@@ -60,13 +67,9 @@ const CreateUser = () => {
         createdBy: { email: user },
         createdAt: new Date(),
       };
-      console.log(user);
-      console.log(newUser);
 
       await setDoc(doc(db, "users", custId), newUser);
       toast.success("user created!");
-
-      console.log("User added with ID:", custId);
 
       setCustId("");
       setName("");
@@ -95,7 +98,6 @@ const CreateUser = () => {
       <Header />
       <div className={styles.container}>
         <h2>Create User</h2>
-        {error && <div className={styles.error}>{error}</div>}
         <div>
           <label>Customer ID:</label>
           <input
