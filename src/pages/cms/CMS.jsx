@@ -209,12 +209,13 @@ const CMS = () => {
           type="text"
           name="heading2"
           value={formData.section2.heading}
-          onChange={(e) => {
-            setFormData((prevFormData) => ({
-              ...prevFormData,
-              [e.target.name]: e.target.value,
-            }));
-          }}
+          // onChange={(e) => {
+          //   setFormData((prevFormData) => ({
+          //     ...prevFormData,
+          //     [e.target.name]: e.target.value,
+          //   }));
+          // }}
+          onChange={handleChange}
         />
 
         <label>Content 2:</label>
